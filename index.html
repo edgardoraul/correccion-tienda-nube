@@ -1,0 +1,75 @@
+<script>
+	/*
+		* Script para poder mostrar los títulos de los productos de una forma correcta en las plantillas de TiendaNube.
+		* Evitamos el recorte innecesario del título.
+		* Favorecemos la experiencia del usuario para buscar lo que necesite, ya sea siendo cliente o vendedor del producto.
+		* Mostrar el código del producto en una leyenda aparte.
+		* El enlace no se modifica.
+		* 
+	*/
+
+	// Se ejecuta una vez cargado el DOM.
+	document.addEventListener("DOMContentLoaded", completador);
+
+	// Función para modificar los títulos de los productos y mostrar los códigos
+	function completador() {
+
+			// Constante que recoje todos los items de productos.
+			const titulares = document.querySelectorAll(".js-item-name.item-name");
+
+			// Variables a usar para el código del producto en cuestión.
+			let codigo;
+			let primerParentesis;
+			let ultimoParenteis;
+
+			// Agrega un estilo para evitar el recorte en modo móvil
+			const estilo = document.createElement("style");
+			estilo.textContent = `
+				.en-bloques
+				{
+					display: block;
+					margin: 0.5em auto -1.5em auto;
+				}
+				@media (max-width:769px) {
+					.js-item-name.item-name {
+						display: block !important;
+					}
+				}`;
+			document.head.appendChild(estilo);
+			
+			// Recorre cada item del arreglo
+			for( i = 0; i < titulares.length; i++ )
+			{
+					// Ubicación del primer paréntesis.
+					primerParentesis = titulares[i].title.indexOf("(");
+					
+					// Ubicación del último paréntesis.
+					ultimoParenteis = titulares[i].title.indexOf(")");
+					
+					// Se recorta el titular sin el código, ni paréntesis, ni espacios.
+					titulares[i].innerHTML = titulares[i].title.slice(0, primerParentesis - 1);
+					
+					// Extracción del código del producto.
+					codigo = titulares[i].title.slice( primerParentesis + 1, ultimoParenteis );
+					
+					// Creamos elementos adicionales
+					const br1 = document.createElement("br");
+					const small = document.createElement("small");
+					const br2 = document.createElement("br");
+					
+					// Completamos el código con leyenda y formato
+					small.textContent = "Código: " + codigo;
+					small.classList.add("text-capitalize", "en-bloques");
+					
+					// Y agregamos los elementos adicionales al DOM
+					titulares[i].parentNode.appendChild(br1);
+					titulares[i].parentNode.appendChild(small);
+					titulares[i].parentNode.appendChild(br2);
+					
+					// Mostramos el resultado por consola
+					console.log(codigo + ": " + titulares[i].innerHTML);
+			}
+	}
+	</script>
+</body>
+</html>
